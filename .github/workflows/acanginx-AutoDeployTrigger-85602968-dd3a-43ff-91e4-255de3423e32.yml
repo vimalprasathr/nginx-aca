@@ -39,6 +39,17 @@ jobs:
           
       - name: Get container apps properties
         run: |
+          az containerapp show --name acanginx --resource-group vimal001
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Install jq
+        run: sudo apt-get install jq
+
+      - name: Check provisioning state and running status
+        run: |
           output=$(az containerapp show --name acanginx --resource-group vimal001)
           provisioningState=$(echo $output | jq -r '.properties.provisioningState')
           runningStatus=$(echo $output | jq -r '.properties.runningStatus')
@@ -46,10 +57,6 @@ jobs:
             echo "Error: Provisioning state is not 'Succeeded' or running status is not 'Running'."
             exit 1
           fi
-        env:
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           
             
 
