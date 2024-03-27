@@ -39,7 +39,7 @@ jobs:
           
       - name: Check container app state
         run: |
-          az containerapp show --name acanginx --resource-group vimal001
+          az containerapp show --name acanginx --resource-group vimal001 --query instanceView.state
         env:
           AZURE_SERVICE_PRINCIPAL_USERNAME: ${{ secrets.AZURE_SERVICE_PRINCIPAL_USERNAME }}
           AZURE_SERVICE_PRINCIPAL_PASSWORD: ${{ secrets.AZURE_SERVICE_PRINCIPAL_PASSWORD }}
