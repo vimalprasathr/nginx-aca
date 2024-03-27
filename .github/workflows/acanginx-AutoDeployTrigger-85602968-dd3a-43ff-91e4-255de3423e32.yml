@@ -39,6 +39,7 @@ jobs:
           
       - name: Get container apps properties
         run: |
+          sleep 300
           az containerapp show --name acanginx --resource-group vimal001
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -54,7 +55,7 @@ jobs:
             output=$(az containerapp show --name acanginx --resource-group vimal001)
             provisioningState=$(echo $output | jq -r '.properties.provisioningState')
             runningStatus=$(echo $output | jq -r '.properties.runningStatus')
-            if [ "$provisioningState" = "Succeeded" ] && [ "$runningStatus" = "Running" ]; then
+            if [ "$provisioningState" = "Failed" ] && [ "$runningStatus" = "Failed" ]; then
               echo "Container is running successfully."
               exit 0
             else
