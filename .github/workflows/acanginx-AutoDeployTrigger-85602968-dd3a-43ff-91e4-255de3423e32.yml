@@ -37,6 +37,14 @@ jobs:
           resourceGroup: vimal001
           imageToBuild: aca0001.azurecr.io/acanginx:${{ github.sha }}
           
+      - name: Check container app state
+        run: |
+          az container show --name acanginx --resource-group vimal001 --query instanceView.state
+        env:
+          AZURE_SERVICE_PRINCIPAL_USERNAME: ${{ secrets.AZURE_SERVICE_PRINCIPAL_USERNAME }}
+          AZURE_SERVICE_PRINCIPAL_PASSWORD: ${{ secrets.AZURE_SERVICE_PRINCIPAL_PASSWORD }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          
             
 
      
