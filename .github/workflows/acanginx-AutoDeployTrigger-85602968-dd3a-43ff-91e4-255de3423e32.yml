@@ -50,13 +50,20 @@ jobs:
 
       - name: Check provisioning state and running status
         run: |
-          output=$(az containerapp show --name acanginx --resource-group vimal001)
-          provisioningState=$(echo $output | jq -r '.properties.provisioningState')
-          runningStatus=$(echo $output | jq -r '.properties.runningStatus')
-          if [ "$provisioningState" != "Succeeded" ] || [ "$runningStatus" != "Running" ]; then
-            echo "Error: Provisioning state is not 'Succeeded' or running status is not 'Running'."
-            exit 1
-          fi
+          for i in {1..5}; do
+            output=$(az containerapp show --name acanginx --resource-group vimal001)
+            provisioningState=$(echo $output | jq -r '.properties.provisioningState')
+            runningStatus=$(echo $output | jq -r '.properties.runningStatus')
+            if [ "$provisioningState" = "Succeeded" ] && [ "$runningStatus" = "Running" ]; then
+              echo "Container is running successfully."
+              exit 0
+            else
+              echo "Retry $i: Provisioning state is $provisioningState and running status is $runningStatus."
+              sleep 10  # Wait for 10 seconds before retrying
+            fi
+          done
+          echo "Error: Provisioning state is not 'Succeeded' or running status is not 'Running' after multiple retries."
+          exit 1
           
             
 
