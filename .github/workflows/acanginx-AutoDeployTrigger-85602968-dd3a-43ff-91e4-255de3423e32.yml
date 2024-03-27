@@ -39,6 +39,7 @@ jobs:
           
       - name: Get latest revision name
         run: |
+          sleep 300
           latest_revision=$(az containerapp revision list --name acanginx --resource-group vimal001 --query '[].name' -o json | jq -r '.[-1]')
           echo "Latest revision name: $latest_revision"
         env:
@@ -58,7 +59,7 @@ jobs:
       - name: Check Container apps status
         run: |
           for i in {1..5}; do
-            output=$(az containerapp show --name acanginx --resource-group vimal001)
+            output=$(az containerapp revision show --name acanginx --resource-group vimal001 --revision "$latest_revision")
             provisioningState=$(echo $output | jq -r '.properties.provisioningState')
             runningStatus=$(echo $output | jq -r '.properties.runningStatus')
             if [ "$provisioningState" = "Succeeded" ] && [ "$runningStatus" = "Running" ]; then
@@ -70,7 +71,11 @@ jobs:
             fi
           done
           echo "Error: Provisioning state is not 'Succeeded' or running status is not 'Running' after multiple retries."
-          exit 1    
+          exit 1
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
             
 
      
