@@ -59,7 +59,7 @@ jobs:
               exit 0
             else
               echo "Retry $i: Provisioning state is $provisioningState and running status is $runningStatus."
-              sleep 10  # Wait for 10 seconds before retrying
+              sleep 300  # Wait for 10 seconds before retrying
             fi
           done
           echo "Error: Provisioning state is not 'Succeeded' or running status is not 'Running' after multiple retries."
