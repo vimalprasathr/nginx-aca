@@ -48,8 +48,8 @@ jobs:
 
       - name: Check provisioning state and running status
         run: |
-          revision_details=$(az containerapp revision show --name acanginx --resource-group vimal001 --revision "$latest_revision")
-          echo "Revision details: $revision_details"
+          latest_revision_details=$(az containerapp revision show --name acanginx --resource-group vimal001 --revision "$latest_revision")
+          echo "Latest revision details: $latest_revision_details"
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
