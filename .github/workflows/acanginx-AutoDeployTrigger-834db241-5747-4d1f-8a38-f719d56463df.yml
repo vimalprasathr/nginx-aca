@@ -1,0 +1,43 @@
+name: Trigger auto deployment for acanginx
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - '**'
+    - '.github/workflows/acanginx-AutoDeployTrigger-834db241-5747-4d1f-8a38-f719d56463df.yml'
+
+  # Allow manual trigger 
+  workflow_dispatch:
+      
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.ACANGINX_AZURE_CREDENTIALS }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          appSourcePath: ${{ github.workspace }} 
+          registryUrl: hub.docker.com
+          registryUsername: ${{ secrets.ACANGINX_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.ACANGINX_REGISTRY_PASSWORD }}
+          containerAppName: acanginx
+          resourceGroup: vimal001
+          imageToBuild: hub.docker.com/acanginx:${{ github.sha }}
+          
+            
+
+     
+
