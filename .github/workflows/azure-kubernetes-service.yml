@@ -35,11 +35,11 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_CONTAINER_REGISTRY: "your-azure-container-registry"
-  CONTAINER_NAME: "your-container-name"
-  RESOURCE_GROUP: "your-resource-group"
-  CLUSTER_NAME: "your-cluster-name"
-  DEPLOYMENT_MANIFEST_PATH: "your-deployment-manifest-path"
+  AZURE_CONTAINER_REGISTRY: "vimal0001.azurecr.io"
+  CONTAINER_NAME: "myapp"
+  RESOURCE_GROUP: "vimal-rg"
+  CLUSTER_NAME: "vimall001"
+  DEPLOYMENT_MANIFEST_PATH: "deploy.yaml"
 
 jobs:
   buildImage:
