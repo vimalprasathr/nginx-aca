@@ -44,6 +44,8 @@ jobs:
         uses: azure/use-kubelogin@v1
         with:
           kubelogin-version: 'v1.0.0'
+        env:
+          ACTIONS_STEP_DEBUG: true
 
       - name: Get K8s context
         uses: azure/aks-set-context@v1
