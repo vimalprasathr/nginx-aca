@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: githubactions-aks-demo
-        image: wannabeegeek/githubactions-aks-demo
+        image: $AZURE_CONTAINER_REGISTRY.azurecr.io/$CONTAINER_NAME:${{ github.sha }}
         resources:
           limits:
             memory: "128Mi"
