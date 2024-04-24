@@ -36,7 +36,7 @@ on:
 
 env:
   AZURE_CONTAINER_REGISTRY: "vimal0001.azurecr.io"
-  CONTAINER_NAME: "myapp"
+  CONTAINER_NAME: "githubactions-aks-demo"
   RESOURCE_GROUP: "vimal-rg"
   CLUSTER_NAME: "vimall001"
   DEPLOYMENT_MANIFEST_PATH: "deploy.yaml"
