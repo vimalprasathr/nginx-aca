@@ -45,8 +45,8 @@ jobs:
         uses: azure/aks-set-context@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          cluster-name: $CLUSTER_NAME
-          resource-group: $RESOURCE_GROUP
+          cluster-name: ${{ env.CLUSTER_NAME }}
+          resource-group: ${{ env.RESOURCE_GROUP }}
           
   # Create K8s secrets to pull images
       - name: Create secret in Kubernetes cluster
