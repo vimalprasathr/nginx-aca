@@ -8,7 +8,7 @@ on:
 env:
   AZURE_CONTAINER_REGISTRY: "vimal0001.azurecr.io"
   CONTAINER_NAME: "githubactions-aks-demo"
-  RESOURCE_GROUP: "vimal-rg"
+  RESOURCE_GROUP: "vimal_rg"
   CLUSTER_NAME: "vimall001"
   DEPLOYMENT_MANIFEST_PATH: "k8s/"
 
