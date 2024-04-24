@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: githubactions-aks-demo
-        image: '${{ ACR_NAME }}:${{ github.sha }}'
+        image: ${{ ACR_NAME }}:${{ github.sha }}
         resources:
           limits:
             memory: "128Mi"
