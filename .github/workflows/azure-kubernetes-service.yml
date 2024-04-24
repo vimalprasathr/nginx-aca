@@ -38,7 +38,7 @@ jobs:
       - name: Azure login
         uses: azure/login@v1
         with:
-          credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Set up kubelogin for non-interactive login
         uses: azure/use-kubelogin@v1
@@ -48,7 +48,7 @@ jobs:
       - name: Get K8s context
         uses: azure/aks-set-context@v1
         with:
-          credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
           cluster-name: $CLUSTER_NAME
           resource-group: $RESOURCE_GROUP
 
