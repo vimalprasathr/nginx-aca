@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_CONTAINER_REGISTRY: "vimal0001.azurecr.io"
+  AZURE_CONTAINER_REGISTRY: "vimal0001"
   CONTAINER_NAME: "githubactions-aks-demo"
   RESOURCE_GROUP: "vimal_rg"
   CLUSTER_NAME: "vimall001"
