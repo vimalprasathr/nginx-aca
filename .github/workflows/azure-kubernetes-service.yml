@@ -10,7 +10,7 @@ env:
   CONTAINER_NAME: "githubactions-aks-demo"
   RESOURCE_GROUP: "vimal_rg"
   CLUSTER_NAME: "vimall001"
-  DEPLOYMENT_MANIFEST_PATH: "k8s/"
+  #DEPLOYMENT_MANIFEST_PATH: "k8s/"
 
 jobs:
   buildImage:
@@ -72,7 +72,7 @@ jobs:
             k8s/deployment.yml
             k8s/service.yml
           # Fully qualified resource URL of the image(s) to be used for substitutions on the manifest files Example: contosodemo.azurecr.io/helloworld:test
-          image: '${{ env.AZURE_CONTAINER_REGISTRY.azurecr.io }}/{{ $env.CONTAINER_NAME }}:${{ github.sha }}'
+          image: '${{env.AZURE_CONTAINER_REGISTRY.azurecr.io}}/${{env.CONTAINER_NAME}}:${{github.sha}}'
           # Name of a docker-registry secret that has already been set up within the cluster. Each of these secret names are added under imagePullSecrets field for the workloads found in the input manifest files
           imagepullsecrets: docker-image-pull-secret
           # deploy/promote/reject
