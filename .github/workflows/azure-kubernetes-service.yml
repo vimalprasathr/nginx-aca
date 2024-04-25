@@ -63,6 +63,6 @@ jobs:
           manifests: |
             k8s/deployment.yml
             k8s/service.yml
-          image: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}
+          images: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}
           imagepullsecrets: docker-image-pull-secret
           action: deploy
