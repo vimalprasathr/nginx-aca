@@ -27,10 +27,7 @@ jobs:
         run: |
           az acr build --image $AZURE_CONTAINER_REGISTRY.azurecr.io/$CONTAINER_NAME:${{ github.sha }} --registry $AZURE_CONTAINER_REGISTRY -g $RESOURCE_GROUP .
           #sed -i "s|githubactions-aks-demo:latest|${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}|g" k8s/deployment.yml
-      - name: Replace Image Name in Deployment File
-        run: |
-         sed -i "s|githubactions-aks-demo:latest|${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}|g" k8s/deployment.yml
-         cat k8s/deployment.yml
+
 
   deploy:
     runs-on: ubuntu-latest
@@ -43,6 +40,11 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      - name: Replace Image Name in Deployment File
+        run: |
+         sed -i "s|githubactions-aks-demo:latest|${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}|g" k8s/deployment.yml
+         cat k8s/deployment.yml
 
       - name: Get K8s context
         uses: azure/aks-set-context@v1
