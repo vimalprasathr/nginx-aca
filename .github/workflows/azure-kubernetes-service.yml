@@ -26,6 +26,10 @@ jobs:
       - name: Build and push image to ACR
         run: |
           az acr build --image $AZURE_CONTAINER_REGISTRY.azurecr.io/$CONTAINER_NAME:${{ github.sha }} --registry $AZURE_CONTAINER_REGISTRY -g $RESOURCE_GROUP .
+          sed -i "s|original|${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}|g" k8s/deployment.yml
+     # - name: Replace Image Name in Deployment File
+     #    run: |
+     #     sed -i "s|original|${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}|g" k8s/deployment.yml
 
   deploy:
     runs-on: ubuntu-latest
