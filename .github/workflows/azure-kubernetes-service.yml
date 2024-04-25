@@ -10,7 +10,6 @@ env:
   CONTAINER_NAME: "githubactions-aks-demo"
   RESOURCE_GROUP: "vimal_rg"
   CLUSTER_NAME: "vimal001"
-  #DEPLOYMENT_MANIFEST_PATH: "k8s/"
 
 jobs:
   buildImage:
@@ -40,7 +39,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-
       - name: Get K8s context
         uses: azure/aks-set-context@v1
         with:
@@ -48,33 +46,23 @@ jobs:
           cluster-name: ${{ env.CLUSTER_NAME }}
           resource-group: ${{ env.RESOURCE_GROUP }}
           
-  # Create K8s secrets to pull images
+      # Create K8s secrets to pull images
       - name: Create secret in Kubernetes cluster
         uses: Azure/k8s-create-secret@v1.1
         with:
-          # Container registry url
           container-registry-url: https://vimal0001.azurecr.io/
-          # Container registry username
-          container-registry-username: '${{secrets.ACR_USERNAME}}'
-          # Container registry password
-          container-registry-password:  '${{secrets.ACR_PASSWORD}}'
-          # Type of Kubernetes secret. For example, docker-registry or generic
+          container-registry-username: ${{ secrets.ACR_USERNAME }}
+          container-registry-password: ${{ secrets.ACR_PASSWORD }}
           secret-type: docker-registry
-          # Name of the secret. You can use this secret name in the Kubernetes YAML configuration file.
           secret-name: docker-image-pull-secret
 
       # Deploy to k8s cluster
       - name: Deploy to Kubernetes cluster
         uses: Azure/k8s-deploy@v1
         with:        
-          # Path to the manifest files which will be used for deployment.
           manifests: |
             k8s/deployment.yml
             k8s/service.yml
-          # Fully qualified resource URL of the image(s) to be used for substitutions on the manifest files Example: contosodemo.azurecr.io/helloworld:test
-          image: |
-            ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}
-          # Name of a docker-registry secret that has already been set up within the cluster. Each of these secret names are added under imagePullSecrets field for the workloads found in the input manifest files
+          image: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}
           imagepullsecrets: docker-image-pull-secret
-          # deploy/promote/reject
           action: deploy
