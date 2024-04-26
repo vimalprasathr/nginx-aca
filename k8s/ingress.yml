@@ -12,7 +12,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: app1-nginx-clusterip-service
+            name: githubactions-aks-demo-service
             port:
               number: 80
 
