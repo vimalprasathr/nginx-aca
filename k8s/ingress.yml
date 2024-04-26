@@ -6,14 +6,16 @@ metadata:
     kubernetes.io/ingress.class: nginx  
 spec:  
   rules:
-  - http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: githubactions-aks-demo-service
-            port:
-              number: 80
+    - host: tvlcloud.tech
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: githubactions-aks-demo-service
+                port: 
+                  number: 80
+              
 
   
