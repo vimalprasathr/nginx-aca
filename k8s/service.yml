@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     app: githubactions-aks-demo
-  type: LoadBalancer
+  type: NodePort
   ports:
   - port: 80
     targetPort: 80
