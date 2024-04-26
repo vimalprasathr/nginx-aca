@@ -7,7 +7,7 @@ metadata:
 spec:  
   ingressClassName: nginx
   rules:
-    - host: tvlcloud.tech
+    - host: k8s.tvlcloud.tech
       http:
         paths:
           - path: /
