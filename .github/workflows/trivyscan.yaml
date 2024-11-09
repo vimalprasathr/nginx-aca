@@ -1,0 +1,39 @@
+name: Docker Build and Push
+
+on:
+  push:
+    branches:
+      - main  # Adjust this according to your branch name
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: |
+        touch .env
+        echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
+        echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" | sed 's/./& /g' 
+        BUILD_DATE=$(date "+%d%m%Y")
+        BUILD_TIME=$(date "+%H%M%S")
+        BUILD_NUMBER="${BUILD_NUMBER}"
+        VERSION="${BUILD_DATE}.${BUILD_TIME}-${BUILD_NUMBER}"
+        echo "version=${VERSION}" >> .env
+        cat .env
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx:${{ github.sha }} .
+      env:
+        BUILD_NUMBER: ${{ github.run_number }}
+
+    - name: Set Version
+      run: |
+        cat .env
+
+    - name: Login to Docker Hub
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Push Docker image
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/nginx:${{ github.sha }}
