@@ -6,7 +6,7 @@ on:
       - Trivy-Image-Scan-GA  # Adjust this according to your branch name
 
 jobs:
-  build-and-push:
+  build-and-scan-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,7 +17,6 @@ jobs:
       run: |
         touch .env
         echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
-        echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" | sed 's/./& /g' 
         BUILD_DATE=$(date "+%d%m%Y")
         BUILD_TIME=$(date "+%H%M%S")
         BUILD_NUMBER="${BUILD_NUMBER}"
@@ -28,12 +27,16 @@ jobs:
       env:
         BUILD_NUMBER: ${{ github.run_number }}
 
-    - name: Set Version
-      run: |
-        cat .env
-
     - name: Login to Docker Hub
       run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Trivy Scan Docker Image
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ secrets.DOCKER_USERNAME }}/nginx:${{ github.sha }}
+        format: 'table'  # Display in table format
+        exit-code: 0     # Continue workflow even if vulnerabilities are found
+        ignore-unfixed: true  # Only show vulnerabilities with available fixes
 
     - name: Push Docker image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/nginx:${{ github.sha }}
