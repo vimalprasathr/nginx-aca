@@ -34,9 +34,11 @@ jobs:
       uses: aquasecurity/trivy-action@master
       with:
         image-ref: ${{ secrets.DOCKER_USERNAME }}/nginx:${{ github.sha }}
-        format: 'table'  # Display in table format
-        exit-code: 0     # Continue workflow even if vulnerabilities are found
-        ignore-unfixed: true  # Only show vulnerabilities with available fixes
+        format: 'table'                # Display in table format
+        severity: 'HIGH,CRITICAL'      # Only scan for high or critical vulnerabilities
+        ignore-unfixed: false          # Include all vulnerabilities, fixed or not
+        exit-code: 1                   # Fail the pipeline if vulnerabilities are found
 
     - name: Push Docker image
+      if: success()                    # Only push if the previous steps succeeded
       run: docker push ${{ secrets.DOCKER_USERNAME }}/nginx:${{ github.sha }}
