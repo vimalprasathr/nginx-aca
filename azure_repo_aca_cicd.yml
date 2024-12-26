@@ -21,6 +21,6 @@ stages:
             displayName: 'Push image to Docker Hub'
             inputs:
               containerRegistry: '$(CONTAINERREGISTRY_NAME)'
-              repository: '$(ACRUSERNAME)/$(IMAGE_NAME)'
+              repository: '$(IMAGE_NAME)'
               command: 'buildAndPush'
               tags: '$(TAG)'
