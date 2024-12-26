@@ -16,14 +16,7 @@ stages:
     displayName: 'Build'
     pool:
       vmImage: 'ubuntu-latest'
-    steps:
-    - task: CmdLine@2
-      displayName: 'Create .env file'
-      inputs:
-        script: |
-          echo "API_URL = $(API_URL_DEV)" > .env
-          cat .env
-          ls -a
+      
     - task: Docker@2
       displayName: 'Push image to Docker Hub'
       inputs:
