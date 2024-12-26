@@ -9,19 +9,18 @@ variables:
   TAG: '$(Build.SourceVersion)'
 
 stages:
-  - stage: Build
+  - stage: Build and Push image
     displayName: 'Build and push image'
-  jobs:
-  - job: Build
-    displayName: 'Build'
-    pool:
-      vmImage: 'ubuntu-latest'
-      
-    - task: Docker@2
-      displayName: 'Push image to Docker Hub'
-      inputs:
-        containerRegistry: '$(CONTAINERREGISTRY_NAME)'
-        repository: '$(ACRUSERNAME)/$(IMAGE_NAME)'
-        command: 'buildAndPush'
-        tags: '$(TAG)'
-
+    jobs:
+      - job: Build
+        displayName: 'Build'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: Docker@2
+            displayName: 'Push image to Docker Hub'
+            inputs:
+              containerRegistry: '$(CONTAINERREGISTRY_NAME)'
+              repository: '$(ACRUSERNAME)/$(IMAGE_NAME)'
+              command: 'buildAndPush'
+              tags: '$(TAG)'
