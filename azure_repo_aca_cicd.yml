@@ -1,0 +1,71 @@
+trigger:
+  branches:
+    include:
+    - main
+resources:
+  repositories:
+  - repository: self
+variables:
+- group: dev
+stages:
+- stage: Build
+  displayName: 'Build and push image'
+  jobs:
+  - job: Build
+    displayName: 'Build'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: CmdLine@2
+      displayName: 'Create .env file'
+      inputs:
+        script: |
+          echo "API_URL = $(API_URL_DEV)" > .env
+          cat .env
+          ls -a
+    - task: Docker@2
+      displayName: 'Push image to Docker Hub'
+      inputs:
+        containerRegistry: '$(CONTAINERREGISTRY_NAME)'
+        repository: '$(ACRUSERNAME)/$(IMAGE_NAME)'
+        command: 'buildAndPush'
+        tags: '$(TAG)'
+- stage: Deploy
+  displayName: 'Deploy to Container Apps'
+  jobs:
+  - job: Deploy
+    displayName: 'Deploy'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: CmdLine@2
+      displayName: 'Print Debug Information'
+      inputs:
+        script: |
+          echo "Debug: IMAGE_NAME = $(IMAGE_NAME)"
+          echo "Debug: TAG = $(TAG)"
+          echo "Debug: CONTAINERAPPS_APP = $(CONTAINERAPPS_APP)"
+          echo "Debug: RESOURCE_GROUP = $(RESOURCE_GROUP)"
+          echo "Debug: CONTAINERAPPS_ENVIRONMENT = $(CONTAINERAPPS_ENVIRONMENT)"
+          echo "Debug: ACR_NAME = $(ACR_NAME)"
+          echo "Debug: API_URL = $(API_URL_DEV)"
+    - task: AzureContainerApps@1
+      displayName: 'Deploy new container version'
+      inputs:
+        azureSubscription: '$(AZURESUBSCRIPTION)'
+        imageToDeploy: 'docker.io/$(ACRUSERNAME)/$(IMAGE_NAME):$(TAG)'
+        containerAppName: '$(CONTAINERAPPS_APP)'
+        resourceGroup: '$(RESOURCE_GROUP)'
+        containerAppEnvironment: '$(CONTAINERAPPS_ENVIRONMENT)'
+        targetPort: '80'
+        ingress: 'external'
+        acrPassword: '$(ACRPASSWORD)'
+        acrUsername: '$(ACRUSERNAME)'
+        location: 'East US'
+        yamlConfigPath: ''
+        appSourcePath: ''
+        dockerfilePath: ''
+        environmentVariables: ''
+        runtimeStack: ''
+        workingDirectory: ''
+
