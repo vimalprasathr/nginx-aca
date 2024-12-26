@@ -15,12 +15,12 @@ stages:
 
           # Set up Docker image name
           - script: |
-              echo "##vso[task.setvariable variable=IMAGE_NAME]$(DOCKER_IMAGE)"
+              echo "##vso[task.setvariable variable=IMAGE]$(DOCKER_IMAGE)"
             displayName: 'Set up Docker image name'
 
           # Update Dockerfile to use the specified image name
           - script: |
-              sed -i "s|^FROM .*|FROM $(IMAGE_NAME)|" Dockerfile
+              sed -i "s|^FROM .*|FROM $(IMAGE)|" Dockerfile
               cat Dockerfile
             displayName: 'Update Dockerfile'
 
