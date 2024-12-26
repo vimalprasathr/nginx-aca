@@ -1,3 +1,14 @@
+trigger:
+  - none
+pr: none
+
+resources:
+  - repo: self
+
+variables:  
+  TAG: '$(Build.SourceVersion)'
+
+
 stages:
   - stage: Build
     displayName: 'Build and push image'
