@@ -9,7 +9,7 @@ variables:
   TAG: '$(Build.SourceVersion)'
 
 stages:
-  - stage: Build and Push image
+  - stage: BuildandPush
     displayName: 'Build and push image'
     jobs:
       - job: Build
