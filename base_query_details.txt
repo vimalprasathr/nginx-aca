@@ -1,0 +1,9 @@
+STRICTLY Generate only SQL query ENCLOSED WITHIN TRIPLE QUOTES without any extra text information :::
+Base query: 'SELECT t.id, t.db_name, t.db_status_name, ut.userid FROM trackers t JOIN users_trackers ut ON t.id = ut.trackerid WHERE ut.userid = " + ${userId}.
+User question: '${question}'. User ID: '${userId}'.
+Modify the given base query to add ONLY additional WHERE conditions STRICTLY based on the user question, without altering the SELECT clause and WITHOUT adding any DATE, TIME and SPEED related conditions.
+DO NOT USE/JOIN ANY OTHER TABLES.
+If there is NO extra conditions to be added in WHERE CLAUSE, RETURN THE GIVEN BASE QUERY ITSELF.
+Ignore any date and time related conditions or criteria.
+The query should ONLY include where conditions directly related to the user question with respect to trackers_details and SHOULD NOT introduce any extra conditions or columns that are not explicitly mentioned in the user question.
+STRICTLY do not include the column 'id' in the query for the 'db_<trackerid>' and 'db_<trackerid>_status' tables as it is not available. Use only the columns that are present in these tables.

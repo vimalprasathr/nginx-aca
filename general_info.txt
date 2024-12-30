@@ -1,0 +1,20 @@
+The database consists of several related tables: 'users', 'institute_details', 'users_trackers', 'trackers', 'trackers_details'.
+Each table has specific attributes and relationships.
+'institute_details' stores data about institutes, including their name, code and contact details.
+'trackers' holds vehicle tracking data, with a 'db_name' pointing to a specific data table for each vehicle, and 'db_status_name' for status information.
+'trackers_details' contains detailed information ONLY about the tracker devices, vehicles and driver details.
+'users' contains user information, with user roles and permissions, and has a relation to 'users_trackers'.
+'users_trackers' maps the relationship between users and trackers, including permission levels and the type of trips.
+SQL queries should join these tables as necessary to retrieve relevant data, adhering to the relationships and ensuring referential integrity.
+STRICTLY GENERATE QUERY ONLY WITH EXACT COLUMN NAMES IN THE TABLES ALONG WITH ALIAS NAMES FOR TABLES AND COLUMNS, SHOULD NOT GENERATE QUERY WITH COLUMN NAMES THAT ARE NOT AVAILABLE IN THE TABLES
+Important instructions for forming SQL queries:
+- When dealing with columns of datatype TIMESTAMP, if you need to consider only the date part for filtering or joining, wrap the column using the DATE function. For example, use 'DATE(timestamp_column) = '2023-01-01'' to include all data from January 1st, 2023. If both date and time are important, use the column directly without wrapping.
+- Ensure each column is mapped to its correct table. For example, the 'speed' column is in the 'db_<trackerid>' table, not in the 'trackers' table.
+- Do not attempt to access columns that do not exist in a table. For instance, the 'trackers' table does not have a 'speed' column, and the 'db_<trackerid>' table does not have an 'id' column.
+- Use the correct table aliases in JOIN clauses. For example, if joining 'trackers_details' (aliased as 'TD') with 'db_<trackerid>' (aliased as 'DB'), ensure the ON clause uses columns that exist in both tables.
+- When filtering data by date, ensure to specify the date range using the appropriate placeholders or actual date values. For example, use BETWEEN '2023-01-01' AND '2023-01-31' to include all data from January 1st to January 31st, 2023. If placeholders like 'start_date' and 'end_date' are used, ensure they are replaced with valid date values in the query.
+- When generating the output, ensure that if there is no record for a user on the specific condition, the result SHOULD NOT INCLUDE NULL VALUES . Instead, the result should OMIT these entries entirely to maintain a clean and concise output format.
+- When generating SQL queries, ensure to include the entire query for each iteration, avoiding instructions to repeat patterns or queries. If the query follows a pattern that needs to be repeated, provide the full query for each instance of the pattern. Ensure that the query includes all necessary components, such as SELECT, FROM, JOIN, WHERE, GROUP BY, and any other relevant clauses, for each iteration.
+WHILE QUERY FORMATION, STRICTLY MAP COLUMNS TO THEIR RESPECTIVE TABLES. DO NOT MAP COLUMNS TO TABLES WHICH DO NOT CONTAIN THEM.
+Include UNION ALL, JOINS, LEFT JOIN, RIGHT JOIN, FULL OUTER JOIN accordingly, DON'T FORGET.
+The dynamic 'db_<trackerid>' table does not have a direct relationship with other tables, and there is no 'id' column in this table. When joining the 'db_<trackerid>' table with other tables, use the syntax 'JOIN db_<trackerid> d ON t.db_name = 'db_<trackerid>'', where 't' refers to the 'trackers' table. Do not attempt to join the 'db_<trackerid>' table with other tables using a non-existent column or relationship.

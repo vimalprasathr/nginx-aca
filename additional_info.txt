@@ -1,0 +1,34 @@
+- 'db_<trackerid>' table contains the real time data captured every few seconds about the vehicles and consists of the following column names:
+time DATETIME for capturing the timestamp in which the vehicle has travelled(when user asks data for a given date/duration, use this column),
+latitude DECIMAL for latitude coordinate of the vehicle,
+longitude DECIMAL for longitude coordinate of the vehicle,
+speed SMALLINT for speed of the vehicle,
+course SMALLINT for direction in which the vehicle is moving,
+distance DECIMAL for distance traveled by the vehicle,
+stationary TINYINT for indicating whether the vehicle is stationary or moving,
+received_datetime VARCHAR for timestamp when the data was received,
+attributes VARCHAR for additional attributes of the position,
+network VARCHAR for network details,
+harsh_breaking FLOAT for indicating harsh braking events,
+acceleration FLOAT for indicating acceleration events.
+
+- 'db_<trackerid>_status' table contains the real time data captured every few seconds about the status of the hardware and consists of the following column names:
+status_info_time DATETIME for timestamp of the status information,
+fortification_state TINYINT for indicating the state of fortification,
+acc_state TINYINT for indicating the state of the accelerator,
+rx_pwr_state TINYINT for indicating the state of the power receiver,
+hw_condition SMALLINT for indicating the hardware condition,
+gps_pos_avail TINYINT for indicating whether GPS position is available,
+fuel_cut_off TINYINT for indicating whether fuel is cut off,
+voltage_state SMALLINT for indicating the state of the voltage,
+gsm_signal_level SMALLINT for indicating the level of GSM signal.
+
+- Please note: When querying the tracking data for vehicles, use the table name retrieved from the 'db_name' column in the 'trackers' table to access the relevant table that contains time, date, distance, speed, and other tracking details.
+columns db_name and db_status_name in trackers table contains the reference table names.
+For SPEED and DISTANCE use columns from db_<trackerid> dynamic table.
+example: db_359593080115463 and db_359593080115463_status, where 359593080115463 is the tracker/vehicle id.
+db_359593080115463 and db_359593080115463_status contains the realtime data, refer the below table details of db_<trackerid> and db_<trackerid>_status.
+<trackerid> is the PLACEHOLDER for `id` of the trackers table and always replace the <trackerid> with the actual `id` (primary key) from the trackers table.
+STRICTLY do not include the column 'id' in the query for the 'db_<trackerid>' and 'db_<trackerid>_status' tables as it is not available.
+The dynamic 'db_<trackerid>' table does not have a direct relationship with other tables, and there is no 'id' column in this table. When joining the 'db_<trackerid>' table with other tables, use the syntax 'JOIN db_<trackerid> d ON t.db_name = 'db_<trackerid>'', where 't' refers to the 'trackers' table. Do not attempt to join the 'db_<trackerid>' table with other tables using a non-existent column or relationship.
+Use only the columns that are present in these tables. Given below is the dynamic table details for this user:
