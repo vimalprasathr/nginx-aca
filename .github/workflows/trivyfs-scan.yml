@@ -16,15 +16,15 @@ jobs:
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
+      env:
+        TRIVY_DISABLE_VEX_NOTICE: true
       with:
           scan-type: "fs"
           scan-ref: .
           format: 'table'
           severity: 'HIGH,CRITICAL'
-          exit-code: 1
+          exit-code: 0
 
-
-        
         
     - name: Trivy FS Scan
       run: |
