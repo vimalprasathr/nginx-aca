@@ -1,0 +1,53 @@
+name: Docker Build and TrivyScan
+
+on:
+  push:
+    branches:
+      - trivyfs-scan  # Adjust this according to your branch name
+
+jobs:
+  build-and-scan-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: |
+        touch .env
+        echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
+        BUILD_DATE=$(date "+%d%m%Y")
+        BUILD_TIME=$(date "+%H%M%S")
+        BUILD_NUMBER="${BUILD_NUMBER}"
+        VERSION="${BUILD_DATE}.${BUILD_TIME}-${BUILD_NUMBER}"
+        echo "version=${VERSION}" >> .env
+        cat .env
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx:${{ github.sha }} .
+      env:
+        BUILD_NUMBER: ${{ github.run_number }}
+
+    - name: Login to Docker Hub
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Trivy FS Scan
+      run: |
+        mkdir -p trivy-reports
+        trivy fs . --format table --severity HIGH,CRITICAL --output trivy-reports/fs-scan-report.txt
+        cat trivy-reports/fs-scan-report.txt
+      env:
+        TRIVY_USERNAME: ${{ secrets.TRIVY_USERNAME }}
+        TRIVY_PASSWORD: ${{ secrets.TRIVY_PASSWORD }}
+
+    - name: Trivy Scan Docker Image
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ secrets.DOCKER_USERNAME }}/nginx:${{ github.sha }}
+        format: 'table'                # Display in table format
+        severity: 'HIGH,CRITICAL'      # Only scan for high or critical vulnerabilities
+        ignore-unfixed: false          # Include all vulnerabilities, fixed or not
+        exit-code: 1                   # Fail the pipeline if vulnerabilities are found
+
+    - name: Push Docker image
+      if: success()                    # Only push if the previous steps succeeded
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/nginx:${{ github.sha }}
