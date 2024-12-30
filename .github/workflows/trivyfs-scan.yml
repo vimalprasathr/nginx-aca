@@ -28,6 +28,7 @@ jobs:
         
     - name: Trivy FS Scan
       run: |
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         mkdir -p trivy-reports
         docker run --rm -v $(pwd):/project aquasecurity/trivy fs /project --scanners vuln --format table --severity LOW,MEDIUM,HIGH,CRITICAL --output /project/trivy-reports/fs-scan-report.txt
         cat trivy-reports/fs-scan-report.txt
