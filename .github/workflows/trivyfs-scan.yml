@@ -3,7 +3,7 @@ name: Docker Build and TrivyScan
 on:
   push:
     branches:
-      - trivyfs-scan  # Adjust this according to your branch name
+      - Trivy-Image-Scan-GA  # Adjust this according to your branch name
 
 jobs:
   build-and-scan-push:
@@ -12,6 +12,11 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Install Trivy
+      run: |
+        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
+        trivy --version
 
     - name: Build Docker image
       run: |
@@ -35,9 +40,6 @@ jobs:
         mkdir -p trivy-reports
         trivy fs . --format table --severity HIGH,CRITICAL --output trivy-reports/fs-scan-report.txt
         cat trivy-reports/fs-scan-report.txt
-      env:
-        TRIVY_USERNAME: ${{ secrets.TRIVY_USERNAME }}
-        TRIVY_PASSWORD: ${{ secrets.TRIVY_PASSWORD }}
 
     - name: Trivy Scan Docker Image
       uses: aquasecurity/trivy-action@master
