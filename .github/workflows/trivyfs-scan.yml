@@ -29,8 +29,10 @@ jobs:
     - name: Trivy FS Scan
       run: |
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker run --rm -v $(pwd):/target aquasec/trivy:0.45.1 fs /target --scanners vuln --format table --severity LOW,MEDIUM,HIGH,CRITICAL
+        #docker run --rm -v $(pwd):/target aquasec/trivy:0.45.1 fs /target --scanners vuln --format table --severity LOW,MEDIUM,HIGH,CRITICAL
+        trivy fs . --scanners vuln --format table --severity LOW,MEDIUM,HIGH,CRITICAL --output fs-scan-report.txt
         ls -l
+        cat fs-scan-report.txt
 
     - name: Build Docker image
       run: |
