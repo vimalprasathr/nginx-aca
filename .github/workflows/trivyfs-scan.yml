@@ -17,6 +17,8 @@ jobs:
       run: |
         curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
         trivy --version
+        trivy fs --format table -o report.html .
+        cat report.html
 
     - name: Build Docker image
       run: |
