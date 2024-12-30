@@ -16,6 +16,8 @@ jobs:
     - name: Install Trivy
       run: |
         curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
+        echo "Adding Trivy to PATH"
+        echo "PATH=$PATH:$HOME/bin" >> $GITHUB_ENV
         trivy --version
 
     - name: Build Docker image
@@ -50,6 +52,4 @@ jobs:
         ignore-unfixed: false          # Include all vulnerabilities, fixed or not
         exit-code: 1                   # Fail the pipeline if vulnerabilities are found
 
-    - name: Push Docker image
-      if: success()                    # Only push if the previous steps succeeded
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/nginx:${{ github.sha }}
+    - name: Push Docker ima
