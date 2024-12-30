@@ -3,7 +3,7 @@ name: TrivyFS Scan
 on:
   push:
     branches:
-      - Trivy-Image-Scan-GA  # Adjust this according to your branch name
+      - trivyfs-scan1  # Adjust this according to your branch name
 
 jobs:
   build-and-scan-push:
