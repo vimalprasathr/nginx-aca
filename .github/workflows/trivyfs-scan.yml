@@ -52,4 +52,6 @@ jobs:
         ignore-unfixed: false          # Include all vulnerabilities, fixed or not
         exit-code: 1                   # Fail the pipeline if vulnerabilities are found
 
-    - name: Push Docker ima
+    - name: Push Docker image
+      if: success()                    # Only push if the previous steps succeeded
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/nginx:${{ github.sha }}
