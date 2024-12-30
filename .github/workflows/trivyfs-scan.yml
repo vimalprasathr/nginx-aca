@@ -1,9 +1,9 @@
-name: Trivy FS Scan
+name: TrivyFS Scan
 
 on:
   push:
     branches:
-      - trivyfs-scan1  # Adjust this according to your branch name
+      - Trivy-Image-Scan-GA  # Adjust this according to your branch name
 
 jobs:
   build-and-scan-push:
@@ -13,11 +13,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Install Trivy
+    - name: Install Trivy using apt-get
       run: |
-        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
-        echo "Adding Trivy to PATH"
-        echo "PATH=$PATH:$HOME/bin" >> $GITHUB_ENV
+        sudo apt-get update
+        sudo apt-get install -y wget gnupg
+        wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+        echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -cs) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+        sudo apt-get update
+        sudo apt-get install -y trivy
         trivy --version
 
     - name: Build Docker image
