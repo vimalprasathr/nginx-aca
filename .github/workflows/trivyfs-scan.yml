@@ -42,7 +42,7 @@ jobs:
 
     - name: Trivy FS Scan
       run: |
-        trivy fs . --format table --severity HIGH,CRITICAL --output fs-scan-report.txt
+        trivy fs .  --scanners vuln --format table --severity HIGH,CRITICAL --output fs-scan-report.txt
         ls -l
         cat fs-scan-report.txt
 
