@@ -42,9 +42,9 @@ jobs:
 
     - name: Trivy FS Scan
       run: |
-        mkdir -p trivy-reports
-        trivy fs . --format table --severity HIGH,CRITICAL --output trivy-reports/fs-scan-report.txt
-        cat trivy-reports/fs-scan-report.txt
+        trivy fs . --format table --severity HIGH,CRITICAL --output fs-scan-report.txt
+        ls -l
+        cat fs-scan-report.txt
 
     - name: Trivy Scan Docker Image
       uses: aquasecurity/trivy-action@master
