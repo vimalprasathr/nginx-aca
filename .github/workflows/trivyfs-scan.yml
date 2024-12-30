@@ -1,4 +1,4 @@
-name: TrivyFS Scan
+name: Trivy FS Scan
 
 on:
   push:
