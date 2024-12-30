@@ -42,7 +42,8 @@ jobs:
 
     - name: Trivy FS Scan
       run: |
-        trivy fs .  --scanners vuln --format table --severity LOW,MEDIUM,HIGH,CRITICAL
+        trivy fs --format table -o report.html .
+        cat report.html
         ls -l
 
     - name: Trivy Scan Docker Image
