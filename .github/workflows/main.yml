@@ -21,6 +21,12 @@ jobs:
           git config user.email "actions@github.com"
 
 
+      - name: List all local branches
+        run: |
+         git branch -a
+
+
+
       - name: Fetch all branches and tags
         run: |
           git remote set-url origin https://github.com/${{ github.repository }}.git
