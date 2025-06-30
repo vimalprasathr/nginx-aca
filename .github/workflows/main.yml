@@ -1,0 +1,26 @@
+name: Mirror to Azure Repos
+
+on:
+  push:
+    branches:
+      - '**'  # Trigger on push to any branch
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout GitHub code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensure all branches and tags are fetched
+
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Push to Azure DevOps Repos
+        run: |
+          git remote add azure https://${{ secrets.AZURE_USERNAME }}:${{ secrets.AZURE_PAT }}@vimal-playground/github-migration/_git/nginx-aca.git
+          git push --mirror azure
