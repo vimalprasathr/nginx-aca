@@ -23,4 +23,6 @@ jobs:
       - name: Push to Azure DevOps Repos
         run: |
           git remote add azure https://${{ secrets.AZURE_USERNAME }}:${{ secrets.AZURE_PAT }}@dev.azure.com/vimal-playground/github-migration/_git/nginx-aca.git
-          git push --mirror azure
+          git fetch origin "+refs/heads/*:refs/remotes/origin/*"
+          git push azure --all
+          git push azure --tags
