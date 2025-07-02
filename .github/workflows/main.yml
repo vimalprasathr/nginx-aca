@@ -1,4 +1,4 @@
-name: Mirror to Azure Repos
+name: Mirror to Azure DevOps Repos
 
 on:
   push:
@@ -6,36 +6,44 @@ on:
       - '**'  # Trigger on push to any branch
 
 jobs:
-  sync:
+  mirror:
+    name: Mirror All Branches and Tags
     runs-on: ubuntu-latest
+    timeout-minutes: 10  # Auto-cancel if stuck too long
 
     steps:
-      - name: Checkout GitHub code
+      - name: Checkout full GitHub repo
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Ensure all branches and tags are fetched
+          fetch-depth: 0  # Get all branches and tags
 
-      - name: Configure Git
+      - name: Configure Git user
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
-
-      - name: List all local branches
+      - name: Remove remote if already exists
         run: |
-         git branch -a
+          git remote remove azure || true
 
-
-
-      - name: Fetch all branches and tags
+      - name: Add Azure DevOps remote
         run: |
-          git remote set-url origin https://github.com/${{ github.repository }}.git
-          git fetch origin "+refs/heads/*:refs/remotes/origin/*"
-          git fetch --tags
+          git remote add azure https://AZURE_USERNAME:${{ secrets.AZURE_PAT }}@dev.azure.com/vimal-playground/github-migration/_git/nginx-aca.git
 
-      - name: Push to Azure DevOps Repos
+      - name: Push all branches and tags to Azure DevOps (with retry)
         run: |
-          git remote add azure https://${{ secrets.AZURE_USERNAME }}:${{ secrets.AZURE_PAT }}@dev.azure.com/vimal-playground/github-migration/_git/nginx-aca.git
-          git fetch origin "+refs/heads/*:refs/remotes/origin/*"
-          git push azure --all
-          git push azure --tags
+          for i in {1..3}; do
+            git push azure --all && git push azure --tags && break
+            echo "Push failed, retrying in 10 seconds... ($i/3)"
+            sleep 10
+          done
+
+      # Optional: Notify on failure (Slack or other systems)
+      # - name: Notify Slack on failure
+      #   if: failure()
+      #   uses: slackapi/slack-github-action@v1.24.0
+      #   with:
+      #     payload: |
+      #       {
+      #         "text": "❌ Mirror to Azure DevOps failed for `${{ github.repository }}` on branch `${{ github.ref_name }}`"
+      #       }
