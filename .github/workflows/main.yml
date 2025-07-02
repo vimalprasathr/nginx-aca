@@ -28,7 +28,7 @@ jobs:
 
       - name: Add Azure DevOps remote
         run: |
-          git remote add azure https://AZURE_USERNAME:${{ secrets.AZURE_PAT }}@dev.azure.com/vimal-playground/github-migration/_git/nginx-aca.git
+          git remote add azure https://AZURE_USERNAME:${{ secrets.AZURE_PAT }}@dev.azure.com/vimal-playground/github-migration/_git/nginx-migration
 
       - name: Push all branches and tags to Azure DevOps (with retry)
         run: |
