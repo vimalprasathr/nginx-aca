@@ -1,4 +1,4 @@
-name: TrivyFS Scan
+name: TrivyFS Scan -Latest
 
 on:
   push:
