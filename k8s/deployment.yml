@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: argo-app
-        image: vimalr/argo-app:latest   # Docker Hub repo name here
+        image: vimalr/argo-app:7e186f356cf1d2334c177ffcd1682c2501994682
         resources:
           limits:
             memory: "128Mi"
