@@ -1,17 +1,19 @@
-name: Build and Push Image + Update GitOps Repo
+name: Build and Update GitOps
 
 on:
   push:
-  #  branches:
-  #    - main
+    branches: [ "main" ]
 
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
+      - name: Checkout source repo
         uses: actions/checkout@v4
+
+      - name: Set IMAGE TAG
+        run: echo "IMAGE_TAG=${GITHUB_SHA}" >> $GITHUB_ENV
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -19,35 +21,27 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build Image
+      - name: Build and Push Image
         run: |
-          IMAGE_TAG=${{ github.sha }}
-          docker build -t vimalr/myappnginx:$IMAGE_TAG .
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          docker build -t vimalr/argo-app:${{ env.IMAGE_TAG }} .
+          docker push vimalr/argo-app:${{ env.IMAGE_TAG }}
 
-      - name: Push Image
-        run: |
-          docker push vimalr/myappnginx:${{ env.IMAGE_TAG }}
-
-      - name: Checkout GitOps Repo
+      - name: Checkout GitOps repo
         uses: actions/checkout@v4
         with:
+          repository: vimalprasathr/nginx-aca
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: gitops
 
-          repository: ${{ secrets.GITOPS_REPO }}
-          token: ${{ secrets.GH_TOKEN }}
-          ref: argo-cd
-          path: k8s
-
-
-      - name: Update Image Tag in Dev
+      - name: Update image tag in GitOps repo
         run: |
-          sed -i "s|image:.*|image: vimalr/myappnginx:${{ env.IMAGE_TAG }}|g" gitops/dev/deployment.yaml
+          sed -i "s|image: vimal/argo-app:.*|image: vimalr/argo-app:${{ env.IMAGE_TAG }}|g" k8s/deployment.yaml
 
-      - name: Create Pull Request
+      - name: Create PR to GitOps repo
         uses: peter-evans/create-pull-request@v5
         with:
           path: gitops
-          commit-message: "Update dev image tag to ${{ env.IMAGE_TAG }}"
           branch: update-image-${{ env.IMAGE_TAG }}
-          title: "Update image to ${{ env.IMAGE_TAG }}"
-          body: "Auto update image tag after CI build"
+          commit-message: "Update image tag to ${{ env.IMAGE_TAG }}"
+          title: "Update image tag to ${{ env.IMAGE_TAG }}"
+          body: "Auto updating image to ${{ env.IMAGE_TAG }}"
