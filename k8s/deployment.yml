@@ -2,10 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: argo-app
-  labels:
-    app: argo-app
+  namespace: argo-app
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: argo-app
@@ -16,11 +14,8 @@ spec:
     spec:
       containers:
       - name: argo-app
-        image: vimalr/argo-app:fc6aaff5a33a7838849da5bbefa723ad91598468
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
+        image: vimalr/argo-app:latest
         ports:
         - containerPort: 80
+
 
