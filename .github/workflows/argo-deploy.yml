@@ -35,7 +35,7 @@ jobs:
 
       - name: Update image tag in GitOps repo
         run: |
-          sed -i "s|image: vimal/argo-app:.*|image: vimalr/argo-app:${{ env.IMAGE_TAG }}|g" k8s/deployment.yaml
+          sed -i "s|image: vimalr/argo-app:.*|image: vimalr/argo-app:${{ env.IMAGE_TAG }}|g" k8s/deployment.yaml
 
       - name: Create PR to GitOps repo
         uses: peter-evans/create-pull-request@v5
