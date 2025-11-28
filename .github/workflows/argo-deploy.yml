@@ -45,8 +45,10 @@ jobs:
       - name: Create PR to GitOps repo
         uses: peter-evans/create-pull-request@v5
         with:
-          path: gitops
-          branch: update-image-${{ env.IMAGE_TAG }}
-          commit-message: "Update image tag to ${{ env.IMAGE_TAG }}"
-          title: "Update image tag to ${{ env.IMAGE_TAG }}"
-          body: "Auto updating image to ${{ env.IMAGE_TAG }}"
+            token: ${{ secrets.GH_PAT }}
+            path: gitops
+            branch: update-image-${{ env.IMAGE_TAG }}
+            commit-message: "Update image tag to ${{ env.IMAGE_TAG }}"
+            title: "Update image tag to ${{ env.IMAGE_TAG }}"
+            body: "Auto updating image to ${{ env.IMAGE_TAG }}"
+
