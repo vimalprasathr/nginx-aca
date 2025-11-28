@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: argo-app
-        image: vimalr/argo-app:ba204c056d88e0faab4aafefc7b03d6b1780fbfa
+        image: vimalr/argo-app:a0109e8f69442844f1a315d9629fcaab7037d41b
         ports:
         - containerPort: 80
 
