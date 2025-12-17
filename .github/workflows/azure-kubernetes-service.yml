@@ -6,10 +6,10 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_CONTAINER_REGISTRY: "vimal0001"
+  AZURE_CONTAINER_REGISTRY: "vimalacr001"
   CONTAINER_NAME: "githubactions-aks-demo"
-  RESOURCE_GROUP: "vimal_rg"
-  CLUSTER_NAME: "vimal001"
+  RESOURCE_GROUP: "kml_rg_main-a74e386beccc4320"
+  CLUSTER_NAME: "vimal-aks"
 
 jobs:
   buildImage:
@@ -57,7 +57,7 @@ jobs:
       - name: Create secret in Kubernetes cluster
         uses: Azure/k8s-create-secret@v1.1
         with:
-          container-registry-url: https://vimal0001.azurecr.io/
+          container-registry-url: https://vimalacr001.azurecr.io/
           container-registry-username: ${{ secrets.ACR_USERNAME }}
           container-registry-password: ${{ secrets.ACR_PASSWORD }}
           secret-type: docker-registry
