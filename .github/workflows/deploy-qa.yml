@@ -1,0 +1,23 @@
+name: Deploy to QA
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        required: true
+
+env:
+  IMAGE_NAME: vimalr/buildtest
+
+jobs:
+  deploy-qa:
+    runs-on: ubuntu-latest
+    environment: qa
+
+    steps:
+      - name: Print image details
+        run: |
+          echo "Image Name : $IMAGE_NAME"
+          echo "Image Tag  : ${{ inputs.image_tag }}"
+          echo "Full Image : $IMAGE_NAME:${{ inputs.image_tag }}"
+
