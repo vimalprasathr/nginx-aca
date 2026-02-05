@@ -1,0 +1,22 @@
+name: Deploy to Prod
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        required: true
+
+env:
+  IMAGE_NAME:  vimalr/buildtest
+
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-latest
+    environment: prod  # mandatory approval
+
+    steps:
+      - name: Deploy to Prod
+        run: |
+          echo "Image Name : $IMAGE_NAME"
+          echo "Image Tag  : ${{ inputs.image_tag }}"
+          echo "Full Image : $IMAGE_NAME:${{ inputs.image_tag }}"
