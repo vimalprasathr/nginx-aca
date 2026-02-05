@@ -1,0 +1,35 @@
+name: Deploy Application
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select environment"
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - prod
+
+      image_tag:
+        description: "Docker image tag (commit SHA)"
+        required: true
+
+env:
+  IMAGE_NAME: vimalr/buildtest
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    # dynamically set environment for approvals
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Print deployment details
+        run: |
+          echo "Environment : ${{ inputs.environment }}"
+          echo "Image Name  : $IMAGE_NAME"
+          echo "Image Tag   : ${{ inputs.image_tag }}"
+          echo "Full Image  : $IMAGE_NAME:${{ inputs.image_tag }}"
